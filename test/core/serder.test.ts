@@ -92,4 +92,25 @@ describe('Serder', () => {
         aid0 = new Prefixer({ code: MtrDex.Blake3_256 }, ked0);
         assert.equal(aid0.qb64, 'ECHOi6qRaswNpvytpCtpvEh2cB2aLAwVHBLFinno3YVW');
     });
+
+    it('should calculate byte length in version string', async () => {
+        await libsodium.ready;
+
+        const character0 = 'a';
+        const serder0 = new Serder({
+            v: 'KERI10JSON000000_',
+            d: '',
+            a: [character0],
+        });
+        assert.equal(serder0.ked.v, 'KERI10JSON00002a_');
+
+        const character1 = 'ö'; // Two byte char, so should be +1, even though string length is the same
+        const serder1 = new Serder({
+            v: 'KERI10JSON000000_',
+            d: '',
+            a: [character1],
+        });
+
+        assert.equal(serder1.ked.v, 'KERI10JSON00002b_');
+    });
 });
